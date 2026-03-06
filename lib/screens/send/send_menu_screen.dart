@@ -34,20 +34,35 @@ class SendMenuScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 8),
-              // Top row: TeslaPay + (Scan QR / Banking card)
+              // Two-column layout matching Figma design
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // Left column: TeslaPay client + SWIFT transfer
                   Expanded(
-                    child: _SendOptionCard(
-                      title: 'TeslaPay\nclient',
-                      backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.person_rounded,
-                      height: 170,
-                      onTap: () => _push(context, const TeslapaySendScreen()),
+                    child: Column(
+                      children: [
+                        _SendOptionCard(
+                          title: 'TeslaPay\nclient',
+                          backgroundColor: const Color(0xFFEAE6E1),
+                          imagePath: 'assets/icons/icon_teslapay.png',
+                          height: 220,
+                          onTap: () => _push(context, const TeslapaySendScreen()),
+                        ),
+                        const SizedBox(height: 7),
+                        _SendOptionCard(
+                          title: 'SWIFT\ntransfer',
+                          backgroundColor: const Color(0xFFEAE6E1),
+                          imagePath: 'assets/icons/icon_swift.png',
+                          height: 220,
+                          onTap: () =>
+                              _push(context, const SwiftPersonalScreen()),
+                        ),
+                      ],
                     ),
                   ),
                   const SizedBox(width: 7),
+                  // Right column: Scan QR + Banking card + SEPA transfer
                   Expanded(
                     child: Column(
                       children: [
@@ -55,17 +70,26 @@ class SendMenuScreen extends StatelessWidget {
                           title: 'Scan\nQR-code',
                           backgroundColor: const Color(0xFF2937BE),
                           textColor: const Color(0xFFF2F5F7),
-                          icon: Icons.qr_code_2_rounded,
+                          imagePath: 'assets/icons/icon_qr.png',
                           onTap: () => _push(context, const QrScanScreen()),
                         ),
                         const SizedBox(height: 7),
                         _SendOptionCard(
                           title: 'Banking\ncard',
                           backgroundColor: const Color(0xFFEAE6E1),
-                          icon: Icons.credit_card_rounded,
-                          height: 95,
+                          imagePath: 'assets/icons/icon_banking.png',
+                          height: 183,
                           onTap: () =>
                               _push(context, const MastercardSendScreen()),
+                        ),
+                        const SizedBox(height: 7),
+                        _SendOptionCard(
+                          title: 'SEPA\ntransfer (EUR)',
+                          backgroundColor: const Color(0xFFEAE6E1),
+                          imagePath: 'assets/icons/icon_sepa.png',
+                          height: 183,
+                          onTap: () =>
+                              _push(context, const SepaPersonalScreen()),
                         ),
                       ],
                     ),
@@ -73,42 +97,14 @@ class SendMenuScreen extends StatelessWidget {
                 ],
               ),
               const SizedBox(height: 7),
-              // Second row: SWIFT + SEPA transfer
-              Row(
-                children: [
-                  Expanded(
-                    child: _SendOptionCard(
-                      title: 'SWIFT\ntransfer',
-                      backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.hub_rounded,
-                      height: 170,
-                      onTap: () =>
-                          _push(context, const SwiftPersonalScreen()),
-                    ),
-                  ),
-                  const SizedBox(width: 7),
-                  Expanded(
-                    child: _SendOptionCard(
-                      title: 'SEPA\ntransfer (EUR)',
-                      backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.currency_exchange_rounded,
-                      height: 170,
-                      onTap: () =>
-                          _push(context, const SepaPersonalScreen()),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 7),
-              // Third row: SEPA Corporate + SWIFT Corporate
+              // Corporate options row
               Row(
                 children: [
                   Expanded(
                     child: _SendOptionCard(
                       title: 'SEPA\nCorporate',
                       backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.corporate_fare_rounded,
-                      height: 120,
+                      height: 90,
                       onTap: () =>
                           _push(context, const SepaCorporateScreen()),
                     ),
@@ -118,8 +114,7 @@ class SendMenuScreen extends StatelessWidget {
                     child: _SendOptionCard(
                       title: 'SWIFT\nCorporate',
                       backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.language_rounded,
-                      height: 120,
+                      height: 90,
                       onTap: () =>
                           _push(context, const SwiftCorporateScreen()),
                     ),
@@ -154,15 +149,15 @@ class SendMenuScreen extends StatelessWidget {
 class _SendOptionCard extends StatelessWidget {
   final String title;
   final Color backgroundColor;
-  final IconData icon;
+  final String? imagePath;
   final VoidCallback onTap;
   final double height;
 
   const _SendOptionCard({
     required this.title,
     required this.backgroundColor,
-    required this.icon,
     required this.onTap,
+    this.imagePath,
     this.height = 170,
   });
 
@@ -177,8 +172,8 @@ class _SendOptionCard extends StatelessWidget {
           color: backgroundColor,
           borderRadius: BorderRadius.circular(16),
         ),
+        clipBehavior: Clip.hardEdge,
         child: Stack(
-          clipBehavior: Clip.hardEdge,
           children: [
             Positioned(
               top: 14,
@@ -193,16 +188,19 @@ class _SendOptionCard extends StatelessWidget {
                 ),
               ),
             ),
-            Positioned(
-              bottom: 12,
-              left: 0,
-              right: 0,
-              child: Icon(
-                icon,
-                size: 72,
-                color: const Color(0xFF151515).withValues(alpha: 0.28),
+            if (imagePath != null)
+              Positioned(
+                top: 60,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Center(
+                  child: Image.asset(
+                    imagePath!,
+                    fit: BoxFit.contain,
+                  ),
+                ),
               ),
-            ),
           ],
         ),
       ),
@@ -214,15 +212,15 @@ class _SendOptionCardHighlight extends StatelessWidget {
   final String title;
   final Color backgroundColor;
   final Color textColor;
-  final IconData icon;
+  final String? imagePath;
   final VoidCallback onTap;
 
   const _SendOptionCardHighlight({
     required this.title,
     required this.backgroundColor,
     required this.textColor,
-    required this.icon,
     required this.onTap,
+    this.imagePath,
   });
 
   @override
@@ -249,7 +247,8 @@ class _SendOptionCardHighlight extends StatelessWidget {
                 height: 1.2,
               ),
             ),
-            Icon(icon, size: 32, color: textColor),
+            if (imagePath != null)
+              Image.asset(imagePath!, width: 40, height: 40, fit: BoxFit.contain),
           ],
         ),
       ),
