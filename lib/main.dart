@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'navigation/app_router.dart';
 import 'screens/splash_screen.dart';
+import 'screens/receive/receive_menu_screen.dart';
+import 'screens/card/card_info_screen.dart';
+import 'screens/main/home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

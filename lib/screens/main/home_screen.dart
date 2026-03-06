@@ -14,27 +14,27 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentNavIndex = 0;
 
-  static const List<Map<String, dynamic>> _transactions = [
+  static const List<Map<String, dynamic>> _transactionGroups = [
     {
-      'icon': Icons.arrow_upward,
-      'title': 'SEPA Transfer',
-      'date': 'Today, 14:32',
-      'amount': '-€ 250.00',
-      'isOut': true,
+      'date': 'Today',
+      'items': [
+        {'title': 'Incoming', 'subtitle': 'Premium Grey', 'amount': '- 120.0 USD', 'isOut': true},
+        {'title': 'Incoming', 'subtitle': 'Black Plastic', 'amount': '+ 120.0 USD', 'isOut': false},
+      ],
     },
     {
-      'icon': Icons.arrow_downward,
-      'title': 'Salary',
-      'date': 'Yesterday',
-      'amount': '+€ 3,500.00',
-      'isOut': false,
+      'date': '27 July',
+      'items': [
+        {'title': 'Incoming', 'subtitle': 'Premium Grey', 'amount': '- 120.0 USD', 'isOut': true},
+        {'title': 'Incoming', 'subtitle': 'Black Plastic', 'amount': '+ 120.0 USD', 'isOut': false},
+      ],
     },
     {
-      'icon': Icons.arrow_upward,
-      'title': 'Amazon',
-      'date': 'Mar 3',
-      'amount': '-€ 89.99',
-      'isOut': true,
+      'date': '26 July',
+      'items': [
+        {'title': 'Incoming', 'subtitle': 'Premium Grey', 'amount': '- 120.0 USD', 'isOut': true},
+        {'title': 'Incoming', 'subtitle': 'Black Plastic', 'amount': '+ 120.0 USD', 'isOut': false},
+      ],
     },
   ];
 
@@ -56,7 +56,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     _buildAccountsSection(),
                     const SizedBox(height: 16),
                     _buildCardsSection(),
-                    const SizedBox(height: 16),
+                    const SizedBox(height: 12),
+                    _buildShowAllCardsButton(),
+                    const SizedBox(height: 12),
                     _buildGetAccessCard(),
                     const SizedBox(height: 8),
                     _buildRecentTransactionsHeader(),
@@ -423,58 +425,36 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget _buildGetAccessCard() {
-    return Container(
-      width: double.infinity,
-      height: 240,
-      decoration: BoxDecoration(
-        color: const Color(0xFF061016),
-        borderRadius: BorderRadius.circular(20),
+  Widget _buildShowAllCardsButton() {
+    return Center(
+      child: Text(
+        'SHOW ALL CREDIT CARDS',
+        style: GoogleFonts.poppins(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+          color: AppColors.darkText,
+          letterSpacing: 0.5,
+        ),
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
+    );
+  }
+
+  Widget _buildGetAccessCard() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: SizedBox(
+        width: double.infinity,
+        height: 200,
         child: Stack(
+          fit: StackFit.expand,
           children: [
-            // Background gradient overlay simulating building art
+            Image.asset(
+              'assets/bg.jpg',
+              fit: BoxFit.cover,
+            ),
             Container(
-              decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0xFF061016),
-                    Color(0xFF0D2030),
-                    Color(0xFF1A3A50),
-                  ],
-                ),
-              ),
+              color: const Color(0xFF000000).withValues(alpha: 0.35),
             ),
-            // Decorative circles for building silhouette feel
-            Positioned(
-              bottom: -20,
-              left: -30,
-              child: Container(
-                width: 200,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0E3050).withValues(alpha: 0.6),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: -40,
-              right: -20,
-              child: Container(
-                width: 160,
-                height: 160,
-                decoration: BoxDecoration(
-                  color: const Color(0xFF0A2540).withValues(alpha: 0.5),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            // Content
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
               child: Row(
@@ -492,18 +472,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   Container(
-                    width: 24,
-                    height: 24,
+                    width: 28,
+                    height: 28,
                     decoration: BoxDecoration(
                       border: Border.all(
-                          color: AppColors.whiteText.withValues(alpha: 0.6),
+                          color: AppColors.whiteText.withValues(alpha: 0.7),
                           width: 1.5),
                       shape: BoxShape.circle,
                     ),
                     child: const Icon(
                       Icons.arrow_forward,
                       color: AppColors.whiteText,
-                      size: 14,
+                      size: 16,
                     ),
                   ),
                 ],
@@ -545,78 +525,105 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildTransactionsList() {
     return Column(
-      children: _transactions.map((tx) => _buildTransactionItem(tx)).toList(),
-    );
-  }
-
-  Widget _buildTransactionItem(Map<String, dynamic> tx) {
-    final bool isOut = tx['isOut'] as bool;
-    final Color iconBgColor = isOut
-        ? AppColors.error.withValues(alpha: 0.12)
-        : AppColors.success.withValues(alpha: 0.12);
-    final Color iconColor = isOut ? AppColors.error : AppColors.success;
-
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: iconBgColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              tx['icon'] as IconData,
-              color: iconColor,
-              size: 20,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  tx['title'] as String,
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.darkText,
-                    height: 1.2,
-                  ),
+      children: _transactionGroups.map((group) {
+        final items = group['items'] as List<dynamic>;
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                group['date'] as String,
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                  color: AppColors.darkText,
                 ),
-                const SizedBox(height: 2),
-                Text(
-                  tx['date'] as String,
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppColors.secondary,
-                    letterSpacing: 0.25,
-                    height: 1.2,
-                  ),
+              ),
+              const SizedBox(height: 8),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
                 ),
-              ],
-            ),
+                child: Column(
+                  children: items.asMap().entries.map((e) {
+                    final isLast = e.key == items.length - 1;
+                    final tx = e.value as Map<String, dynamic>;
+                    final isOut = tx['isOut'] as bool;
+                    return Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12, vertical: 10),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 32,
+                                height: 32,
+                                decoration: BoxDecoration(
+                                  color: isOut
+                                      ? AppColors.error.withValues(alpha: 0.12)
+                                      : AppColors.success.withValues(alpha: 0.12),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  isOut
+                                      ? Icons.arrow_upward_rounded
+                                      : Icons.arrow_downward_rounded,
+                                  color: isOut ? AppColors.error : AppColors.success,
+                                  size: 16,
+                                ),
+                              ),
+                              const SizedBox(width: 10),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      tx['title'] as String,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w500,
+                                        color: AppColors.darkText,
+                                      ),
+                                    ),
+                                    Text(
+                                      tx['subtitle'] as String,
+                                      style: GoogleFonts.poppins(
+                                        fontSize: 12,
+                                        color: AppColors.secondary,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Text(
+                                tx['amount'] as String,
+                                style: GoogleFonts.poppins(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: isOut ? AppColors.error : AppColors.success,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (!isLast)
+                          Divider(
+                            height: 1,
+                            color: AppColors.background,
+                            indent: 54,
+                          ),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
+            ],
           ),
-          Text(
-            tx['amount'] as String,
-            style: GoogleFonts.poppins(
-              fontSize: 16,
-              fontWeight: FontWeight.w600,
-              color: isOut ? AppColors.error : AppColors.success,
-              height: 1.2,
-            ),
-          ),
-        ],
-      ),
+        );
+      }).toList(),
     );
   }
 

@@ -148,7 +148,7 @@ class _CardPinChangeScreenState extends State<CardPinChangeScreen>
       case _PinChangeState.success:
         return const Color(0xFF4CAF50);
       default:
-        return const Color(0xFF151515);
+        return const Color(0xFFFFBA08);
     }
   }
 
@@ -166,32 +166,35 @@ class _CardPinChangeScreenState extends State<CardPinChangeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F5F7),
+      backgroundColor: const Color(0xFF151515),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF2F5F7),
+        backgroundColor: const Color(0xFF151515),
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Color(0xFF151515), size: 20),
+              color: Color(0xFFF0EFEC), size: 20),
           onPressed: () => Navigator.of(context).pop(),
         ),
         centerTitle: true,
         title: Text(
-          'Change PIN',
+          'Set new PIN code',
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: const Color(0xFF151515),
+            color: const Color(0xFFF0EFEC),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close_rounded,
+                color: Color(0xFFF0EFEC), size: 22),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
       ),
       body: SafeArea(
         child: Column(
           children: [
-            const SizedBox(height: 24),
-            // Step progress indicators
-            if (_state != _PinChangeState.success)
-              _StepIndicator(currentStep: _stepIndex),
             const Spacer(flex: 2),
             // Success state
             if (_state == _PinChangeState.success)
@@ -216,11 +219,28 @@ class _CardPinChangeScreenState extends State<CardPinChangeScreen>
                         fontWeight: FontWeight.w600,
                         color: _state == _PinChangeState.error
                             ? const Color(0xFFFF536F)
-                            : const Color(0xFF151515),
+                            : const Color(0xFFF0EFEC),
                         height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
+                    // Small card preview
+                    Container(
+                      width: 56,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF2C2B2B),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: const Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: EdgeInsets.all(5),
+                          child: _MiniMastercardLogo(),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: List.generate(_pinLength, (i) {
@@ -236,7 +256,7 @@ class _CardPinChangeScreenState extends State<CardPinChangeScreen>
                             border: Border.all(
                               color: filled
                                   ? _dotColor
-                                  : const Color(0xFFA5B1BC),
+                                  : const Color(0xFF858585),
                               width: 1.5,
                             ),
                           ),
@@ -262,7 +282,7 @@ class _CardPinChangeScreenState extends State<CardPinChangeScreen>
                   height: 280,
                   child: Center(
                     child: CircularProgressIndicator(
-                      color: Color(0xFF151515),
+                      color: Color(0xFFFFBA08),
                       strokeWidth: 2,
                     ),
                   ),
@@ -456,7 +476,7 @@ class _PinKeypad extends StatelessWidget {
                 child: const Center(
                   child: Icon(
                     Icons.backspace_outlined,
-                    color: Color(0xFF151515),
+                    color: Color(0xFFF0EFEC),
                     size: 22,
                   ),
                 ),
@@ -503,12 +523,48 @@ class _PinKeyBtnState extends State<_PinKeyBtn> {
               style: GoogleFonts.poppins(
                 fontSize: 28,
                 fontWeight: FontWeight.w600,
-                color: const Color(0xFF151515),
+                color: const Color(0xFFF0EFEC),
                 height: 1.2,
               ),
             ),
           ),
         ),
+      ),
+    );
+  }
+}
+
+class _MiniMastercardLogo extends StatelessWidget {
+  const _MiniMastercardLogo();
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 20,
+      height: 12,
+      child: Stack(
+        children: [
+          Positioned(
+            left: 0,
+            child: Container(
+              width: 12, height: 12,
+              decoration: const BoxDecoration(
+                color: Color(0xFFEB001B),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+          Positioned(
+            right: 0,
+            child: Container(
+              width: 12, height: 12,
+              decoration: const BoxDecoration(
+                color: Color(0xFFF79E1B),
+                shape: BoxShape.circle,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

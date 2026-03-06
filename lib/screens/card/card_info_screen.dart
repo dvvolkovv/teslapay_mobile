@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'card_freeze_screen.dart';
 import 'card_pin_change_screen.dart';
 import 'card_settings_screen.dart';
 import 'card_reissue_virtual_screen.dart';
@@ -13,45 +12,118 @@ class CardInfoScreen extends StatefulWidget {
 }
 
 class _CardInfoScreenState extends State<CardInfoScreen> {
-  bool _cvvVisible = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF2F5F7),
+      backgroundColor: const Color(0xFF151515),
       appBar: AppBar(
-        backgroundColor: const Color(0xFFF2F5F7),
+        backgroundColor: const Color(0xFF151515),
         elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new_rounded,
-              color: Color(0xFF151515), size: 20),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
         centerTitle: true,
         title: Text(
-          'Card Info',
+          'Black Plastic',
           style: GoogleFonts.poppins(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            color: const Color(0xFF151515),
+            color: const Color(0xFFF0EFEC),
           ),
         ),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios_new_rounded,
+              color: Color(0xFFF0EFEC), size: 20),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.close_rounded,
+                color: Color(0xFFF0EFEC), size: 22),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Large dark card widget
-            _CardWidget(cvvVisible: _cvvVisible, onToggleCvv: () {
-              setState(() => _cvvVisible = !_cvvVisible);
-            }),
-            const SizedBox(height: 16),
-            // Info tiles
-            _InfoSection(),
-            const SizedBox(height: 16),
+            // Card preview widget
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+              child: _CardPreview(),
+            ),
+            const SizedBox(height: 20),
             // Action buttons row
-            _ActionButtonsRow(),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _ActionButtonsRow(context: context),
+            ),
             const SizedBox(height: 24),
+            // Activity section header
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Activity in July',
+                    style: GoogleFonts.poppins(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                      color: const Color(0xFFF0EFEC),
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        '45 417.24 EUR',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: const Color(0xFFFFBA08),
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      const Icon(Icons.keyboard_arrow_down_rounded,
+                          color: Color(0xFFFFBA08), size: 18),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            // Progress bar (colored)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: _ActivityProgressBar(),
+            ),
+            const SizedBox(height: 20),
+            // Transactions
+            _TransactionGroup(
+              date: 'Today',
+              transactions: const [
+                _TxItem(title: 'Incoming', subtitle: 'Premium Grey',
+                    amount: '- 120.0 USD', isOut: true),
+                _TxItem(title: 'Incoming', subtitle: 'Black Plastic',
+                    amount: '+ 120.0 USD', isOut: false),
+              ],
+            ),
+            _TransactionGroup(
+              date: '27 July',
+              transactions: const [
+                _TxItem(title: 'Incoming', subtitle: 'Premium Grey',
+                    amount: '- 120.0 USD', isOut: true),
+                _TxItem(title: 'Incoming', subtitle: 'Black Plastic',
+                    amount: '+ 120.0 USD', isOut: false),
+              ],
+            ),
+            _TransactionGroup(
+              date: '26 July',
+              transactions: const [
+                _TxItem(title: 'Incoming', subtitle: 'Premium Grey',
+                    amount: '- 120.0 USD', isOut: true),
+                _TxItem(title: 'Incoming', subtitle: 'Black Plastic',
+                    amount: '+ 120.0 USD', isOut: false),
+              ],
+            ),
+            const SizedBox(height: 32),
           ],
         ),
       ),
@@ -59,71 +131,58 @@ class _CardInfoScreenState extends State<CardInfoScreen> {
   }
 }
 
-class _CardWidget extends StatelessWidget {
-  final bool cvvVisible;
-  final VoidCallback onToggleCvv;
-
-  const _CardWidget({required this.cvvVisible, required this.onToggleCvv});
-
+class _CardPreview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 210,
+      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF151515),
-        borderRadius: BorderRadius.circular(20),
+        color: const Color(0xFF2C2B2B),
+        borderRadius: BorderRadius.circular(16),
       ),
-      padding: const EdgeInsets.all(20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          // Top row: card name + balance + mastercard logo
+          // Top row: card name + balance + mastercard
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Black Plastic',
-                      style: GoogleFonts.poppins(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: const Color(0xFFF0EFEC),
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Linked to EUR account',
-                      style: GoogleFonts.poppins(
-                        fontSize: 12,
-                        color: const Color(0xFF858585),
-                        letterSpacing: 0.25,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    '€ 4,250.00',
+                    'Black Plastic',
                     style: GoogleFonts.poppins(
-                      fontSize: 16,
+                      fontSize: 14,
                       color: const Color(0xFFF0EFEC),
                     ),
                   ),
-                  const SizedBox(height: 6),
+                  Text(
+                    'Linked to EUR account',
+                    style: GoogleFonts.poppins(
+                      fontSize: 11,
+                      color: const Color(0xFF858585),
+                    ),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  Text(
+                    '0 EUR',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: const Color(0xFFF0EFEC),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
                   Container(
-                    width: 36,
-                    height: 22,
+                    width: 32,
+                    height: 20,
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(4),
+                      borderRadius: BorderRadius.circular(3),
                     ),
                     child: const _MastercardLogo(),
                   ),
@@ -131,100 +190,34 @@ class _CardWidget extends StatelessWidget {
               ),
             ],
           ),
-          // Middle: card number
-          Text(
-            '4521 8734 9012 1234',
-            style: GoogleFonts.poppins(
-              fontSize: 18,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFFF0EFEC),
-              letterSpacing: 2,
-            ),
-            overflow: TextOverflow.ellipsis,
-            maxLines: 1,
-          ),
-          // Bottom row: expiry, cvv, holder
+          const SizedBox(height: 24),
+          // Card last 4 digits + card info link
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              _CardDetail(label: 'EXPIRES', value: '08/28'),
-              const SizedBox(width: 20),
-              _CardDetail(
-                label: 'CVV',
-                value: cvvVisible ? '***' : '•••',
-                trailing: GestureDetector(
-                  onTap: onToggleCvv,
-                  child: Icon(
-                    cvvVisible ? Icons.visibility_off_outlined : Icons.visibility_outlined,
-                    color: const Color(0xFF858585),
-                    size: 16,
-                  ),
+              Text(
+                '• 1234',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFFF0EFEC),
+                  letterSpacing: 2,
                 ),
               ),
-              const Spacer(),
-              Flexible(
+              GestureDetector(
+                onTap: () {},
                 child: Text(
-                  'JOHN DOE',
+                  'card info',
                   style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    color: const Color(0xFFF0EFEC),
-                    letterSpacing: 1,
+                    fontSize: 13,
+                    color: const Color(0xFF858585),
                   ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
                 ),
               ),
             ],
           ),
         ],
       ),
-    );
-  }
-}
-
-class _CardDetail extends StatelessWidget {
-  final String label;
-  final String value;
-  final Widget? trailing;
-
-  const _CardDetail({required this.label, required this.value, this.trailing});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text(
-          label,
-          style: GoogleFonts.poppins(
-            fontSize: 10,
-            color: const Color(0xFF858585),
-            letterSpacing: 0.5,
-          ),
-          overflow: TextOverflow.ellipsis,
-          maxLines: 1,
-        ),
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              value,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
-                color: const Color(0xFFF0EFEC),
-              ),
-              overflow: TextOverflow.ellipsis,
-              maxLines: 1,
-            ),
-            if (trailing != null) ...[
-              const SizedBox(width: 4),
-              trailing!,
-            ],
-          ],
-        ),
-      ],
     );
   }
 }
@@ -241,20 +234,22 @@ class _MastercardLogo extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 14,
-              height: 14,
+              width: 12,
+              height: 12,
               decoration: const BoxDecoration(
                 color: Color(0xFFEB001B),
                 shape: BoxShape.circle,
               ),
             ),
-            const SizedBox(width: -4),
-            Container(
-              width: 14,
-              height: 14,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF79E1B),
-                shape: BoxShape.circle,
+            Transform.translate(
+              offset: const Offset(-4, 0),
+              child: Container(
+                width: 12,
+                height: 12,
+                decoration: const BoxDecoration(
+                  color: Color(0xFFF79E1B),
+                  shape: BoxShape.circle,
+                ),
               ),
             ),
           ],
@@ -264,115 +259,19 @@ class _MastercardLogo extends StatelessWidget {
   }
 }
 
-class _InfoSection extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final items = [
-      {'label': 'Card Status', 'value': 'Active', 'badge': true},
-      {'label': 'Card Type', 'value': 'Virtual Mastercard', 'badge': false},
-      {'label': 'Currency', 'value': 'EUR', 'badge': false},
-      {'label': 'Available Balance', 'value': '€ 4,250.00', 'badge': false},
-      {'label': 'Card Limit', 'value': '€ 10,000/month', 'badge': false},
-    ];
-
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: const Color(0xFF39424D).withValues(alpha: 0.06),
-            offset: const Offset(0, 4),
-            blurRadius: 20,
-          ),
-        ],
-      ),
-      child: Column(
-        children: items.asMap().entries.map((e) {
-          final i = e.key;
-          final item = e.value;
-          final isLast = i == items.length - 1;
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 16, vertical: 14),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      item['label'] as String,
-                      style: GoogleFonts.poppins(
-                        fontSize: 14,
-                        color: const Color(0xFF858585),
-                      ),
-                    ),
-                    (item['badge'] as bool)
-                        ? Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 3),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              item['value'] as String,
-                              style: GoogleFonts.poppins(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w600,
-                                color: const Color(0xFF4CAF50),
-                              ),
-                            ),
-                          )
-                        : Text(
-                            item['value'] as String,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600,
-                              color: const Color(0xFF151515),
-                            ),
-                          ),
-                  ],
-                ),
-              ),
-              if (!isLast)
-                const Divider(
-                    height: 1,
-                    indent: 16,
-                    endIndent: 16,
-                    color: Color(0xFFF2F5F7)),
-            ],
-          );
-        }).toList(),
-      ),
-    );
-  }
-}
-
 class _ActionButtonsRow extends StatelessWidget {
+  final BuildContext context;
+  const _ActionButtonsRow({required this.context});
+
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         _ActionBtn(
-          icon: Icons.ac_unit_rounded,
-          label: 'Freeze',
-          onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const CardFreezeScreen())),
-        ),
-        const SizedBox(width: 8),
-        _ActionBtn(
           icon: Icons.pin_outlined,
-          label: 'Change PIN',
+          label: 'Pin-code',
           onTap: () => Navigator.push(context,
               MaterialPageRoute(builder: (_) => const CardPinChangeScreen())),
-        ),
-        const SizedBox(width: 8),
-        _ActionBtn(
-          icon: Icons.settings_outlined,
-          label: 'Settings',
-          onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const CardSettingsScreen())),
         ),
         const SizedBox(width: 8),
         _ActionBtn(
@@ -381,6 +280,66 @@ class _ActionButtonsRow extends StatelessWidget {
           onTap: () => Navigator.push(context,
               MaterialPageRoute(
                   builder: (_) => const CardReissueVirtualScreen())),
+        ),
+        const SizedBox(width: 8),
+        _ActionBtn(
+          icon: Icons.ac_unit_rounded,
+          label: 'Freeze',
+          onTap: () => showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16)),
+              backgroundColor: Colors.white,
+              title: Text(
+                'Freeze the card?',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w600,
+                  color: const Color(0xFF151515),
+                ),
+              ),
+              content: Text(
+                'It will not be available for using',
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontSize: 13,
+                  color: const Color(0xFF858585),
+                ),
+              ),
+              actionsAlignment: MainAxisAlignment.spaceEvenly,
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Freeze',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF4E9AF1),
+                    ),
+                  ),
+                ),
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Cancel',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: const Color(0xFF4E9AF1),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        _ActionBtn(
+          icon: Icons.settings_outlined,
+          label: 'Settings',
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const CardSettingsScreen())),
         ),
       ],
     );
@@ -403,25 +362,18 @@ class _ActionBtn extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: const Color(0xFF2C2B2B),
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF39424D).withValues(alpha: 0.06),
-                offset: const Offset(0, 4),
-                blurRadius: 12,
-              ),
-            ],
           ),
           child: Column(
             children: [
-              Icon(icon, color: const Color(0xFF151515), size: 22),
+              Icon(icon, color: const Color(0xFFF0EFEC), size: 22),
               const SizedBox(height: 6),
               Text(
                 label,
                 style: GoogleFonts.poppins(
                   fontSize: 11,
-                  color: const Color(0xFF151515),
+                  color: const Color(0xFFF0EFEC),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -431,4 +383,144 @@ class _ActionBtn extends StatelessWidget {
       ),
     );
   }
+}
+
+class _ActivityProgressBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(4),
+      child: SizedBox(
+        height: 4,
+        child: Row(
+          children: [
+            Expanded(flex: 40, child: Container(color: const Color(0xFF4E9AF1))),
+            Expanded(flex: 20, child: Container(color: const Color(0xFFFFBA08))),
+            Expanded(flex: 15, child: Container(color: const Color(0xFF4CAF50))),
+            Expanded(flex: 15, child: Container(color: const Color(0xFFFF5722))),
+            Expanded(flex: 10, child: Container(color: const Color(0xFF9C27B0))),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _TransactionGroup extends StatelessWidget {
+  final String date;
+  final List<_TxItem> transactions;
+
+  const _TransactionGroup(
+      {required this.date, required this.transactions});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            date,
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFFF0EFEC),
+            ),
+          ),
+          const SizedBox(height: 8),
+          Container(
+            decoration: BoxDecoration(
+              color: const Color(0xFF2C2B2B),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              children: transactions.asMap().entries.map((e) {
+                final isLast = e.key == transactions.length - 1;
+                return Column(
+                  children: [
+                    _buildTxRow(e.value),
+                    if (!isLast)
+                      Divider(
+                        height: 1,
+                        color: const Color(0xFF151515).withValues(alpha: 0.5),
+                        indent: 48,
+                      ),
+                  ],
+                );
+              }).toList(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTxRow(_TxItem tx) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      child: Row(
+        children: [
+          Container(
+            width: 32,
+            height: 32,
+            decoration: BoxDecoration(
+              color: const Color(0xFF151515),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              tx.isOut ? Icons.arrow_upward_rounded : Icons.arrow_downward_rounded,
+              color: tx.isOut ? const Color(0xFFFF5722) : const Color(0xFF4CAF50),
+              size: 16,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  tx.title,
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: const Color(0xFFF0EFEC),
+                  ),
+                ),
+                Text(
+                  tx.subtitle,
+                  style: GoogleFonts.poppins(
+                    fontSize: 12,
+                    color: const Color(0xFF858585),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            tx.amount,
+            style: GoogleFonts.poppins(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: tx.isOut ? const Color(0xFFFF5722) : const Color(0xFF4CAF50),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TxItem {
+  final String title;
+  final String subtitle;
+  final String amount;
+  final bool isOut;
+
+  const _TxItem({
+    required this.title,
+    required this.subtitle,
+    required this.amount,
+    required this.isOut,
+  });
 }
