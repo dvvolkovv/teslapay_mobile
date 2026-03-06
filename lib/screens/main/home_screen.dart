@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../theme/app_colors.dart';
 import '../../navigation/app_router.dart';
+import '../send/qr_scan_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -88,14 +89,34 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const Spacer(),
-          const Icon(Icons.notifications_outlined,
-              color: AppColors.darkText, size: 24),
+          GestureDetector(
+            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Notifications'), duration: Duration(seconds: 1)),
+            ),
+            child: const Icon(Icons.notifications_outlined,
+                color: AppColors.darkText, size: 24),
+          ),
           const SizedBox(width: 16),
-          const Icon(Icons.search_outlined,
-              color: AppColors.darkText, size: 24),
+          GestureDetector(
+            onTap: () => ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Search'), duration: Duration(seconds: 1)),
+            ),
+            child: const Icon(Icons.search_outlined,
+                color: AppColors.darkText, size: 24),
+          ),
           const SizedBox(width: 16),
-          const Icon(Icons.qr_code_scanner_outlined,
-              color: AppColors.darkText, size: 24),
+          GestureDetector(
+            onTap: () => Navigator.of(context).push(
+              PageRouteBuilder(
+                pageBuilder: (_, __, ___) => const QrScanScreen(),
+                transitionsBuilder: (_, anim, __, child) =>
+                    FadeTransition(opacity: anim, child: child),
+                transitionDuration: const Duration(milliseconds: 250),
+              ),
+            ),
+            child: const Icon(Icons.qr_code_scanner_outlined,
+                color: AppColors.darkText, size: 24),
+          ),
         ],
       ),
     );
@@ -221,36 +242,42 @@ class _HomeScreenState extends State<HomeScreen> {
           ],
         ),
         const SizedBox(height: 12),
-        _buildCardRow(
-          currencyIcon: '€',
-          cardName: 'Black Plastic',
-          subtitle: 'Linked to EUR account',
-          balance: '12 677 EUR',
-          isDark: true,
-          cardBrand: 'mastercard',
-        ),
-        Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: const Color(0xFF39424D).withValues(alpha: 0.05),
-                offset: const Offset(0, -10),
-                blurRadius: 20,
-              ),
-            ],
-            borderRadius: const BorderRadius.only(
-              topLeft: Radius.circular(16),
-              topRight: Radius.circular(16),
-            ),
-          ),
+        GestureDetector(
+          onTap: () => Navigator.of(context).pushNamed(AppRouter.cardInfo),
           child: _buildCardRow(
-            currencyIcon: '\$',
-            cardName: 'Premium Grey',
-            subtitle: 'Linked to USD account',
-            balance: '0 USD',
-            isDark: false,
-            cardBrand: 'visa',
+            currencyIcon: '€',
+            cardName: 'Black Plastic',
+            subtitle: 'Linked to EUR account',
+            balance: '12 677 EUR',
+            isDark: true,
+            cardBrand: 'mastercard',
+          ),
+        ),
+        GestureDetector(
+          onTap: () => Navigator.of(context).pushNamed(AppRouter.cardInfo),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF39424D).withValues(alpha: 0.05),
+                  offset: const Offset(0, -10),
+                  blurRadius: 20,
+                ),
+              ],
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(16),
+                topRight: Radius.circular(16),
+              ),
+            ),
+            child: _buildCardRow(
+              currencyIcon: '\$',
+              cardName: 'Premium Grey',
+              subtitle: 'Linked to USD account',
+              balance: '0 USD',
+              isDark: false,
+              cardBrand: 'visa',
+            ),
           ),
         ),
       ],

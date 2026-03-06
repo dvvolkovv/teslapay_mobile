@@ -34,7 +34,7 @@ class SendMenuScreen extends StatelessWidget {
           child: Column(
             children: [
               const SizedBox(height: 8),
-              // Top row: TeslaPay + Scan QR (tall + highlight)
+              // Top row: TeslaPay + (Scan QR / Banking card)
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -42,7 +42,7 @@ class SendMenuScreen extends StatelessWidget {
                     child: _SendOptionCard(
                       title: 'TeslaPay\nclient',
                       backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.person_outline_rounded,
+                      icon: Icons.person_rounded,
                       height: 170,
                       onTap: () => _push(context, const TeslapaySendScreen()),
                     ),
@@ -55,7 +55,7 @@ class SendMenuScreen extends StatelessWidget {
                           title: 'Scan\nQR-code',
                           backgroundColor: const Color(0xFF2937BE),
                           textColor: const Color(0xFFF2F5F7),
-                          icon: Icons.qr_code_scanner_rounded,
+                          icon: Icons.qr_code_2_rounded,
                           onTap: () => _push(context, const QrScanScreen()),
                         ),
                         const SizedBox(height: 7),
@@ -80,7 +80,7 @@ class SendMenuScreen extends StatelessWidget {
                     child: _SendOptionCard(
                       title: 'SWIFT\ntransfer',
                       backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.public_rounded,
+                      icon: Icons.hub_rounded,
                       height: 170,
                       onTap: () =>
                           _push(context, const SwiftPersonalScreen()),
@@ -91,7 +91,7 @@ class SendMenuScreen extends StatelessWidget {
                     child: _SendOptionCard(
                       title: 'SEPA\ntransfer (EUR)',
                       backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.account_balance_rounded,
+                      icon: Icons.currency_exchange_rounded,
                       height: 170,
                       onTap: () =>
                           _push(context, const SepaPersonalScreen()),
@@ -107,7 +107,7 @@ class SendMenuScreen extends StatelessWidget {
                     child: _SendOptionCard(
                       title: 'SEPA\nCorporate',
                       backgroundColor: const Color(0xFFEAE6E1),
-                      icon: Icons.business_rounded,
+                      icon: Icons.corporate_fare_rounded,
                       height: 120,
                       onTap: () =>
                           _push(context, const SepaCorporateScreen()),
@@ -181,7 +181,7 @@ class _SendOptionCard extends StatelessWidget {
           clipBehavior: Clip.hardEdge,
           children: [
             Positioned(
-              top: 16,
+              top: 14,
               left: 16,
               child: Text(
                 title,
@@ -194,12 +194,13 @@ class _SendOptionCard extends StatelessWidget {
               ),
             ),
             Positioned(
-              bottom: -8,
-              right: -8,
+              bottom: 12,
+              left: 0,
+              right: 0,
               child: Icon(
                 icon,
-                size: 90,
-                color: const Color(0xFF151515).withValues(alpha: 0.12),
+                size: 72,
+                color: const Color(0xFF151515).withValues(alpha: 0.28),
               ),
             ),
           ],
