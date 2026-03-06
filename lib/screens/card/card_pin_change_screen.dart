@@ -372,7 +372,7 @@ class _SuccessViewState extends State<_SuccessView>
               width: 80,
               height: 80,
               decoration: BoxDecoration(
-                color: const Color(0xFF4CAF50).withValues(alpha: 0.1),
+                color: const Color(0xFF4CAF50).withValues(alpha: 0.15),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.check_rounded,
@@ -381,45 +381,10 @@ class _SuccessViewState extends State<_SuccessView>
           ),
           const SizedBox(height: 24),
           Text(
-            'PIN changed successfully',
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              fontWeight: FontWeight.w600,
-              color: const Color(0xFF151515),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
             'Your new PIN is now active',
             style: GoogleFonts.poppins(
               fontSize: 14,
               color: const Color(0xFF858585),
-            ),
-          ),
-          const SizedBox(height: 40),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            child: SizedBox(
-              width: double.infinity,
-              height: 56,
-              child: ElevatedButton(
-                onPressed: widget.onDone,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFFFBA08),
-                  foregroundColor: const Color(0xFF151515),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  elevation: 0,
-                ),
-                child: Text(
-                  'Done',
-                  style: GoogleFonts.poppins(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
             ),
           ),
         ],
